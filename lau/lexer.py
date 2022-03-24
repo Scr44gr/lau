@@ -1,4 +1,5 @@
-from lau.token import (Token, TokenType)
+from re import match
+from lau.token import (Token, TokenType, Tokens)
 
 
 class Lexer:
@@ -11,7 +12,8 @@ class Lexer:
         self._read_character()
     
     def next_token(self) -> Token:
-        token = Token(TokenType.ILLEGAL, self._character)
+        token_type = Tokens.exists(self._character)
+        token = Token(token_type, self._character)
         self._read_character()
         return token
 
