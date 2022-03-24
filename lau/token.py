@@ -3,7 +3,7 @@ from enum import (
     Enum,
     unique
 )
-from typing import NamedTuple
+from typing import Dict, NamedTuple
 
 
 @unique
@@ -23,9 +23,16 @@ class TokenType(Enum):
     RPARENT = auto()
     SEMICOLON = auto()
 
+class  Token(NamedTuple):
+    token_type: TokenType
+    literal: str
+
+    def __str__(self) -> str:
+        return f"Type: {self.token_type}, Literal: {self.literal}"
+
 
 class Tokens(object):
-    TOKENS = {
+    TOKENS: Dict[str, TokenType] = {
         '=': TokenType.ASSIGN,
         ',': TokenType.COMMA,
         ';': TokenType.SEMICOLON,
@@ -39,17 +46,29 @@ class Tokens(object):
         '': TokenType.EOF,
     }
 
+    TOKENS_REGEX: Dict[TokenType, str] = {
+        TokenType.ASSIGN: r'=',
+        TokenType.COMMA: r',',
+        TokenType.SEMICOLON: r';',
+        TokenType.PLUS: r'\+',
+        TokenType.LBRACE: r'{',
+        TokenType.RBRACE: r'}',
+        TokenType.LPARENT: r'\(',
+        TokenType.RPARENT: r'\)',
+        TokenType.LET: r'let',
+        TokenType.FUNCTION: r'fn',
+        TokenType.EOF: r'',
+    }
+
+    LETTER: str = r'^[a-zA-Z_]$'
+    NUMBER: str = r'^\d$'
+    WHITESPACE: str = r'^[\s\t]$'
+
     @classmethod
-    def exists(cls, value: str) -> TokenType:
-
-        if value in cls.TOKENS:
-            return cls.TOKENS[value]
+    def lookup(cls, value: str) -> bool:
+        return value in cls.TOKENS
+    
+    @classmethod
+    def lookup_token_type(cls, value: str) -> TokenType:
         
-        return TokenType.ILLEGAL
-
-class Token(NamedTuple):
-    token_type: TokenType
-    literal: str
-
-    def __str__(self) -> str:
-        return f"Type: {self.token_type}, Literal: {self.literal}"
+        return cls.TOKENS.get(value, TokenType.IDENT)
