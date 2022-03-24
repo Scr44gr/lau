@@ -68,3 +68,20 @@ class LexerTest(TestCase):
             Token(TokenType.SEMICOLON, ';'),
         ]
         self.assertEqual(tokens, expected_tokens)
+    
+    def test_identifier(self):
+        source = 'let number = 5;'
+        lexer = Lexer(source)
+
+        tokens = []
+        for _ in range(5):
+            tokens.append(lexer.next_token())
+
+        expected_tokens = [
+            Token(TokenType.LET, 'let'),
+            Token(TokenType.IDENT, 'number'),
+            Token(TokenType.ASSIGN, '='),
+            Token(TokenType.INT, '5'),
+            Token(TokenType.SEMICOLON, ';'),
+        ]
+        self.assertEqual(tokens, expected_tokens)
