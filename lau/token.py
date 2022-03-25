@@ -9,18 +9,30 @@ from typing import Dict, NamedTuple
 @unique
 class TokenType(Enum):
     ASSIGN = auto()
+    TRUE = auto()
     COMMA = auto()
+    DIVISION = auto()
     EOF = auto()
+    ELSE = auto()
+    ELIF = auto()
     FUNCTION = auto()
+    FALSE   = auto()
     IDENT = auto()
     ILLEGAL = auto()
     INT = auto()
+    IF = auto()
     LBRACE = auto()
+    LT = auto()
     LET = auto()
     LPARENT = auto()
+    MINUS = auto()
+    MULTIPLICATION = auto()
+    NOT = auto()
     PLUS = auto()
+    GT = auto()
     RBRACE = auto()
     RPARENT = auto()
+    RETURN = auto()
     SEMICOLON = auto()
 
 class  Token(NamedTuple):
@@ -35,12 +47,24 @@ class Tokens(object):
     TOKENS: Dict[str, TokenType] = {
         '=': TokenType.ASSIGN,
         ',': TokenType.COMMA,
+        'if': TokenType.IF,
+        'else': TokenType.ELSE,
+        'elif': TokenType.ELIF,
+        'true': TokenType.TRUE,
+        'false': TokenType.FALSE,
+        '!': TokenType.NOT,
+        'return': TokenType.RETURN,
         ';': TokenType.SEMICOLON,
         '+': TokenType.PLUS,
+        '*': TokenType.MULTIPLICATION,
+        '/': TokenType.DIVISION,
+        '-': TokenType.MINUS,
         '{': TokenType.LBRACE,
         '}': TokenType.RBRACE,
         '(': TokenType.LPARENT,
         ')': TokenType.RPARENT,
+        '>': TokenType.GT,
+        '<': TokenType.LT,
         'let': TokenType.LET,
         'fn': TokenType.FUNCTION,
         '': TokenType.EOF,
@@ -62,7 +86,7 @@ class Tokens(object):
 
     LETTER: str = r'^[a-zA-Z_]$'
     NUMBER: str = r'^\d$'
-    WHITESPACE: str = r'^[\s\t]$'
+    WHITESPACE: str = r'^[\s\t\n]$'
 
     @classmethod
     def lookup(cls, value: str) -> bool:
