@@ -6,7 +6,7 @@ from lau.lexer import Lexer
 class LexerTest(TestCase):
 
     def test_illegal(self) -> None:
-        source: str = '!?@'
+        source: str = '~?@'
         lexer: Lexer = Lexer(source)
 
         tokens: List[Token] = []
@@ -14,7 +14,7 @@ class LexerTest(TestCase):
             tokens.append(lexer.next_token())
         
         expected_tokens: List[Token] = [
-            Token(TokenType.ILLEGAL, '!'),
+            Token(TokenType.ILLEGAL, '~'),
             Token(TokenType.ILLEGAL, '?'),
             Token(TokenType.ILLEGAL, '@')
         ]
@@ -22,7 +22,7 @@ class LexerTest(TestCase):
         self.assertEqual(tokens, expected_tokens)
     
     def test_one_character_operator(self) -> None:
-        source: str = '=+'
+        source: str = '=+-*/!'
         lexer: Lexer = Lexer(source)
 
         tokens: List[Token] = []
@@ -32,6 +32,10 @@ class LexerTest(TestCase):
         expected_tokens: List[Token] = [
             Token(TokenType.ASSIGN, '='),
             Token(TokenType.PLUS, '+'),
+            Token(TokenType.MINUS, '-'),
+            Token(TokenType.MULTIPLICATION, '*'),
+            Token(TokenType.DIVISION, '/'),
+            Token(TokenType.NOT, '!'),
         ]
 
         self.assertEqual(tokens, expected_tokens)
@@ -126,5 +130,55 @@ class LexerTest(TestCase):
             Token(TokenType.INT, '10'),
             Token(TokenType.RPARENT, ')'),
             Token(TokenType.SEMICOLON, ';'),
+        ]
+        self.assertEqual(tokens, expected_tokens)
+    
+    def test_control_statement(self):
+
+        source: str = """
+            if (5 < 10) {
+                return true;
+            }
+            elif (5 > 10) {
+                return false;
+            }
+            else {
+                return false;
+            }
+        """
+        lexer: Lexer = Lexer(source)
+        tokens: List[Token] = []
+        for _ in range(28):
+            tokens.append(lexer.next_token())
+        
+        expected_tokens = [
+            Token(TokenType.IF, 'if'),
+            Token(TokenType.LPARENT, '('),
+            Token(TokenType.INT, '5'),
+            Token(TokenType.LT, '<'),
+            Token(TokenType.INT, '10'),
+            Token(TokenType.RPARENT, ')'),
+            Token(TokenType.LBRACE, '{'),
+            Token(TokenType.RETURN, 'return'),
+            Token(TokenType.TRUE, 'true'),
+            Token(TokenType.SEMICOLON, ';'),
+            Token(TokenType.RBRACE, '}'),
+            Token(TokenType.ELIF, 'elif'),
+            Token(TokenType.LPARENT, '('),
+            Token(TokenType.INT, '5'),
+            Token(TokenType.GT, '>'),
+            Token(TokenType.INT, '10'),
+            Token(TokenType.RPARENT, ')'),
+            Token(TokenType.LBRACE, '{'),
+            Token(TokenType.RETURN, 'return'),
+            Token(TokenType.FALSE, 'false'),
+            Token(TokenType.SEMICOLON, ';'),
+            Token(TokenType.RBRACE, '}'),
+            Token(TokenType.ELSE, 'else'),
+            Token(TokenType.LBRACE, '{'),
+            Token(TokenType.RETURN, 'return'),
+            Token(TokenType.FALSE, 'false'),
+            Token(TokenType.SEMICOLON, ';'),
+            Token(TokenType.RBRACE, '}'),
         ]
         self.assertEqual(tokens, expected_tokens)
