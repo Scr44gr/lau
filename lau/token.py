@@ -9,31 +9,37 @@ from typing import Dict, NamedTuple
 @unique
 class TokenType(Enum):
     ASSIGN = auto()
-    TRUE = auto()
     COMMA = auto()
     DIVISION = auto()
+    EQ  = auto()
     EOF = auto()
     ELSE = auto()
     ELIF = auto()
     FUNCTION = auto()
     FALSE   = auto()
+    GE = auto()
     IDENT = auto()
     ILLEGAL = auto()
     INT = auto()
     IF = auto()
     LBRACE = auto()
     LT = auto()
+    LTE = auto()
+    LE = auto()
     LET = auto()
     LPARENT = auto()
     MINUS = auto()
     MULTIPLICATION = auto()
     NOT = auto()
+    NOT_EQUAL = auto()
     PLUS = auto()
     GT = auto()
+    GTE = auto()
     RBRACE = auto()
     RPARENT = auto()
     RETURN = auto()
     SEMICOLON = auto()
+    TRUE = auto()
 
 class  Token(NamedTuple):
     token_type: TokenType
@@ -45,15 +51,12 @@ class  Token(NamedTuple):
 
 class Tokens(object):
     TOKENS: Dict[str, TokenType] = {
+        # operators.
         '=': TokenType.ASSIGN,
+        '==': TokenType.EQ,
+        '!=': TokenType.NOT_EQUAL,
         ',': TokenType.COMMA,
-        'if': TokenType.IF,
-        'else': TokenType.ELSE,
-        'elif': TokenType.ELIF,
-        'true': TokenType.TRUE,
-        'false': TokenType.FALSE,
         '!': TokenType.NOT,
-        'return': TokenType.RETURN,
         ';': TokenType.SEMICOLON,
         '+': TokenType.PLUS,
         '*': TokenType.MULTIPLICATION,
@@ -65,9 +68,19 @@ class Tokens(object):
         ')': TokenType.RPARENT,
         '>': TokenType.GT,
         '<': TokenType.LT,
+        '>=': TokenType.GTE,
+        '<=': TokenType.LTE,
+        '': TokenType.EOF,
+        # keywords
+        'if': TokenType.IF,
+        'else': TokenType.ELSE,
+        'elif': TokenType.ELIF,
+        'true': TokenType.TRUE,
+        'false': TokenType.FALSE,
+        'return': TokenType.RETURN,
         'let': TokenType.LET,
         'fn': TokenType.FUNCTION,
-        '': TokenType.EOF,
+
     }
 
     TOKENS_REGEX: Dict[TokenType, str] = {
@@ -94,5 +107,4 @@ class Tokens(object):
     
     @classmethod
     def lookup_token_type(cls, value: str) -> TokenType:
-        
         return cls.TOKENS.get(value, TokenType.IDENT)
