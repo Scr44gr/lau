@@ -40,11 +40,27 @@ class LexerTest(TestCase):
 
         self.assertEqual(tokens, expected_tokens)
     
+    def test_two_characters_operator(self):
+        source: str = '== != >= <='
+        lexer: Lexer = Lexer(source)
+
+        tokens: List[Token] = []
+        for _ in range(4):
+            tokens.append(lexer.next_token())
+
+        expected_tokens: List[Token] = [
+            Token(TokenType.EQ, '=='),
+            Token(TokenType.NOT_EQUAL, '!='),
+            Token(TokenType.GTE, '>='),
+            Token(TokenType.LTE, '<='),
+        ]
+        self.assertEqual(tokens, expected_tokens)
+
     def test_eof(self) -> None:
         source: str = '+'
         lexer: Lexer = Lexer(source)
 
-        tokens: List[Token] = []
+        tokens: List[Token] = [] 
         for _ in range(len(source) + 1):
             tokens.append(lexer.next_token())
         
@@ -74,7 +90,7 @@ class LexerTest(TestCase):
         self.assertEqual(tokens, expected_tokens)
     
     def test_identifier(self):
-        source: str = 'let number = 5;'
+        source: str = 'let number_5 = 5;'
         lexer: Lexer = Lexer(source)
 
         tokens: List[Token] = []
@@ -83,7 +99,7 @@ class LexerTest(TestCase):
 
         expected_tokens = [
             Token(TokenType.LET, 'let'),
-            Token(TokenType.IDENT, 'number'),
+            Token(TokenType.IDENT, 'number_5'),
             Token(TokenType.ASSIGN, '='),
             Token(TokenType.INT, '5'),
             Token(TokenType.SEMICOLON, ';'),
